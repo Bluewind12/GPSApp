@@ -7,6 +7,7 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import kotlinx.android.synthetic.main.activity_main.*
@@ -25,15 +26,25 @@ class MainActivity : AppCompatActivity(), LocationListener {
 
         checkButton.setOnClickListener {
             val text = "緯度：" + location!!.latitude.toString() + "経度：" + location!!.longitude
-            gpsCheckTextView.text = text
+            var textView = TextView(this)
+            textView.text = text
+            mainLinearLayout.addView(textView)
         }
     }
 
 
     override fun onResume() {
         super.onResume()
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                1
+            )
             return
         }
         manager!!.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 1f, this)
@@ -43,7 +54,11 @@ class MainActivity : AppCompatActivity(), LocationListener {
     override fun onStop() {
         super.onStop()
         if (manager != null) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
                 return
             }
             manager!!.removeUpdates(this)
